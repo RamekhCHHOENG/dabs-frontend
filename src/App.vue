@@ -4,16 +4,14 @@
       app
       :elevation="0"
     >
-      <v-toolbar-title>Doctor Appointment Booking</v-toolbar-title>
       <div class="d-flex align-center">
-        <!-- <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
+        <v-img
+          alt="Doctor+ Logo"
           contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          src="@/assets/images/doctor+.png"
           transition="scale-transition"
-          width="40"
-        /> -->
+          width="170"
+        />
 
         <!-- <v-img
           alt="Vuetify Name"
@@ -24,25 +22,32 @@
           width="100"
         /> -->
       </div>
+      <v-toolbar-title class="primary--text">Doctor Appointment Booking</v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <nav-bar /> 
+      <navbar /> 
+      <login />
     </v-app-bar>
 
     <v-main>
       <router-view/>
     </v-main>
+    
+    <v-content>
+      <d-footer />
+    </v-content>
   </v-app>
 </template>
 
 <script>
 
-import NavBar from '@/components/navigation/NavBar.vue'
 export default {
   name: 'App',
 
   components: {
-    NavBar
+    'navbar': () => import('@/components/navigation/NavBar.vue'),
+    'login': () => import('@/views/authentication/Login.vue'),
+    'd-footer': () => import('@/components/footer/Footer.vue')
   },
 
   data: () => ({

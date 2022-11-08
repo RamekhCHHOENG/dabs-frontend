@@ -1,6 +1,9 @@
 <template>
-    <v-toolbar-items>
-        <v-btn to="/home">Home</v-btn>
-        <v-btn>Login</v-btn>
-    </v-toolbar-items>
+  <v-toolbar-items>
+    <div class="mt-4 primary--text">
+      <v-btn to="#" depressed rounded dense> Doctor </v-btn>
+      <v-btn to="#" depressed rounded dense> Clinics </v-btn>
+      <v-btn to="#" depressed rounded dense> About </v-btn>
+    </div>
+  </v-toolbar-items>
 </template>
