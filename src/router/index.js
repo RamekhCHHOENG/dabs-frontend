@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/home-page/HomeView.vue'
+import HomeView from '../views/home-page/index.vue'
 
 Vue.use(VueRouter)
 

@@ -35,12 +35,14 @@
         <v-hover v-slot="{ hover }">
           <v-btn 
             :color="!hover ? 'primary' : '#fff'"
+            class="text-capitalize"
             outlined
             rounded
+            dense
             :style="{ 'background-color': hover ? '#0288D1' : '#fff' }"
           >
           <v-icon dark>mdi-calendar </v-icon>
-            &nbsp;Appointment
+            &nbsp;<span>Appointment</span>
           </v-btn>
         </v-hover>
       </v-col>
