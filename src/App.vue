@@ -25,17 +25,18 @@
       <v-toolbar-title class="primary--text">Doctor Appointment Booking</v-toolbar-title>
 
       <v-spacer></v-spacer>
+
       <navbar /> 
-      <login />
+
     </v-app-bar>
 
     <v-main>
       <router-view/>
     </v-main>
     
-    <v-content>
+    <div>
       <d-footer />
-    </v-content>
+    </div>
   </v-app>
 </template>
 
@@ -46,12 +47,17 @@ export default {
 
   components: {
     'navbar': () => import('@/components/navigation/NavBar.vue'),
-    'login': () => import('@/views/authentication/Login.vue'),
     'd-footer': () => import('@/components/footer/Footer.vue')
-  },
-
-  data: () => ({
-    //
-  }),
-};
+  }
+}
 </script>
+
+<style scope>
+.v-btn:before {
+  opacity: 0 !important;
+}
+
+.v-ripple__container {
+  opacity: 0 !important;
+}
+</style>
