@@ -1,23 +1,10 @@
 <template>
-  <v-row justify="center">
+  <v-row>
     <v-dialog
-      v-model="dialog"
+      v-model="dialog1"
       persistent
       max-width="600px"
     >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          class="text-capitalize"
-          color="primary"
-          dark
-          v-bind="attrs"
-          v-on="on"
-          rounded
-        >
-          <v-icon>mdi-doctor</v-icon>
-          For Doctor
-        </v-btn>
-      </template>
       <v-card elevation="4" light tag="section">
         <v-card-title>
           <v-layout align-center justify-space-between>
@@ -39,68 +26,6 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-          <!-- <v-container>
-            <v-row>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
-                <v-text-field
-                  label="Legal first name*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
-                <v-text-field
-                  label="Legal middle name"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
-                <v-text-field
-                  label="Legal last name*"
-                  persistent-hint
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6">
-                  <v-text-field
-                      label="Phone Number*"
-                      counter="10"
-                  />
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  label="Email"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="Password*"
-                  type="password"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-              >
-                <v-select
-                  :items="['Doctor', 'Clinic']"
-                  label="Create Account As*"
-                  required
-                ></v-select>
-              </v-col>
-            </v-row>
-          </v-container> -->
           <v-tabs
             v-model="tab"
             active-class="white"
@@ -121,7 +46,7 @@
                   lazy-validation
                 >
                 <v-text-field
-                  v-model="userData.email"
+                  v-model="form.email"
                   :rules="[rules.emailRequired, rules.email]"
                   label="Please enter your Email"
                   prepend-icon="mdi-email"
@@ -132,7 +57,7 @@
                   validate-on-blur
                 />
                 <v-text-field
-                  v-model="userData.password"
+                  v-model="form.password"
                   :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                   :rules="[rules.passwordRequired, rules.min]"
                   :type="show1 ? 'text' : 'password'"
@@ -151,7 +76,7 @@
                       color="primary"
                       dark
                       depressed
-                      @click="dialog = false"
+                      @click="$emit('update:dialog', false)"
                     >
                       Cancel
                     </v-btn>
@@ -160,7 +85,7 @@
                       color="primary"
                       depressed
                       :disabled="!valid"
-                      @click="snackbar = true"
+                      @click="login"
                     >
                       Login
                     </v-btn>
@@ -189,10 +114,10 @@
                 <h4 class="font-weight-black">What type of user are you?</h4>
                 <v-radio-group v-model="userType" row>
                   <v-radio
-                    v-for="n in userTypeList"
-                    :key="n"
-                    :label="n"
-                    :value="n"
+                    v-for="(item, index) in userTypeList"
+                    :key="index"
+                    :label="item"
+                    :value="item"
                   ></v-radio>
                 </v-radio-group>
                 <v-text-field
@@ -244,7 +169,7 @@
                       color="primary"
                       dark
                       depressed
-                      @click="dialog = false"
+                      @click="$emit('update:dialog', false)"
                     >
                       Cancel
                     </v-btn>
@@ -268,21 +193,29 @@
   </v-row>
 </template>
 <script>
+
+import AuthService from '@/services/auth.service'
 export default {
   name: 'LoginView',
-  watch: {
-    userData: {
-      handler(val) {
-        if (val) {
-          this.userData = initialForm()
-          console.log(this.userData, 'here user form')
-        }
-      },
-      immediate: true
+  // watch: {
+  //   form: {
+  //     handler(val) {
+  //       if (val) {
+  //         this.form = initialForm()
+  //       }
+  //     },
+  //     immediate: true
+  //   }
+  // },  
+  props: {
+    dialog: {
+      type: Boolean,
+      required: true,
+      default: () => false
     }
-  },  
+  },
   data: () => ({
-      dialog: false,
+      dialog1: false,
       tab: 0,
       email: null,
       firstName: null,
@@ -295,7 +228,7 @@ export default {
       userType: 1,
 
       userTypeList: ['Doctor', 'Clinic'],
-      userData: initialForm(),
+      form: initialForm(),
       rules: {
       email: value => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -305,11 +238,26 @@ export default {
       passwordRequired: value => !!value || "Your password is required",
       passwordMatch: value => value === this.password || "Your passwords don't match",
       min: v =>
-          v.length >= 14 ||
-          "Your password must be at least 14 characters",
+          v.length >= 8 ||
+          "Your password must be at least 8 characters",
       emailMatch: () => "The email and password you entered don't match"
       }
   }),
+  methods: {
+    async login () {
+      if (!this.$refs.form.validate()) return
+      try {
+        const { token } = await AuthService.loign(this.form)
+
+        localStorage.setItem('token', token)
+        this.$router.push('/')
+      } catch (error) {
+        console.log(error.response.data.message, 'error')
+      } finally {
+        this.$emit('update:dialog', false)
+      }
+    }
+  }
 }
 const initialForm = () => {
   return {
@@ -318,3 +266,4 @@ const initialForm = () => {
   }
 }
 </script>
+
