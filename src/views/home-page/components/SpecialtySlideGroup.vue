@@ -8,7 +8,7 @@
     >
       <specialty-slide-item 
         :image="item.image"
-        :title="item.title"
+        :name="item.name"
       />
     </v-slide-item>
   </v-slide-group>

@@ -7,15 +7,15 @@ const AuthService = {
 
     return data
   },
-  async register() {
-    const data = axios.post()
-
-    return data;
+  async register(payload) {
+    console.log(payload, 'payload')
+    const data = axios.post('/api/v1/register', payload )
+    return data
   },
   async logout() {
     const data = axios.post('/api/v1/logout')
 
-    return data;
+    return data
   },
   async getUserData() {
     const { data } = await axios.get('/api/v1/user')
