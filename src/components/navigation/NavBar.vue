@@ -78,15 +78,14 @@
           color="primary"
           dark
           rounded
+          @click="delRecord"
         >
           <v-icon>mdi-doctor</v-icon>
           For Doctor
         </v-btn>
       </template>
     </template>
-
-
-    
+    <!-- <LoginDialog ref="login" /> -->
   </div>
   <!-- <v-toolbar-items>
   </v-toolbar-items> -->
@@ -99,7 +98,7 @@ import AuthService from '@/services/auth.service'
 export default {
   name: 'NavBar',
   component: {
-    'login': () => import('@/views/authentication/Login.vue'),
+    // LoginDialog: () => import('@/views/authentication/Login.vue'),
   },
   async created () {
     this.user = await AuthService.getUserData()
@@ -107,9 +106,20 @@ export default {
   },  
 
   data: () => ({
-    user: null
+    user: null,
+    dialog: true,
   }),
   methods: {
+    async delRecord() {
+        if (
+          await this.$refs.confirm.open(
+            "Confirm",
+            "Are you sure you want to delete this record?"
+          )
+        ) {
+          this.deleteRecord();
+        }
+      },
     async logout () {
       try {
         await AuthService.logout()
@@ -118,6 +128,9 @@ export default {
       } finally {
         this.user = null
       }
+    },
+    openLoginDialog () {
+      this.$refs.login.open()
     }
   }
 }

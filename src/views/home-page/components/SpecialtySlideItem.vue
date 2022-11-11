@@ -23,7 +23,7 @@
       <p
         class="mt-8"
       >
-        {{ title }}
+        {{ name }}
       </p>
         </div>
     </v-card>
@@ -38,10 +38,10 @@ export default {
       required: true,
       default: () => 'Image',
     },
-    title: {
+    name: {
       type: String,
       required: true,
-      default: () => 'Title',
+      default: () => 'name',
     }
   }
 };

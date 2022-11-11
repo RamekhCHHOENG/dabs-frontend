@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <login />
     <v-row align="center" justify="center" class="text-center">
       <v-col cols="12" >
         <div class="display-2 font-weight-bold">Search Doctor, Make an Appointment</div>
@@ -52,7 +53,7 @@
           description="Patients always return to these doctors"
         />
         <doctor-slide-group 
-          :items="specialtyList"
+          :items="doctors"
         />
       </div>
       <div>
@@ -62,6 +63,7 @@
         />
         <specialty-slide-group 
           :items="specialtyList"
+          :loading="true"
         />
       </div>
       <div>
@@ -70,7 +72,7 @@
           description="Patients have reviewed excellence for these clinics"
         />
         <specialty-slide-group 
-          :items="specialtyList"
+          :items="clinics"
         />
       </div>
     </div>
@@ -93,12 +95,15 @@
         </v-fade-transition>
       </v-container>
     </div> -->
-    <!-- <login /> -->
+    <login />
   </v-container>
 </template>
 
 <script>
   // import Login from './authentication/login.vue'
+  import SpecialtyService from '@/services/specialty.service'
+  import ClinicService from '@/services/clinic.service'
+  import DoctorService from '@/services/doctor.service'
 
   export default {
     name: 'HomeView',
@@ -107,67 +112,29 @@
       'list-title-description': () => import('./components/ListTitle.vue'),
       'doctor-slide-group': () => import('./components/DoctorSlideGroup.vue'),
       'specialty-slide-group': () => import('./components/SpecialtySlideGroup.vue'),
+      'login': () => import('@/views/authentication/Login.vue')
+    },
+    async created () {
+      const { specialties } = await SpecialtyService.getTopSpecialty()
+      const { clinics } = await ClinicService.getTopClinic()
+      const { doctors } = await DoctorService.getTopDoctor()
+      this.doctors = doctors
+      this.specialtyList = specialties
+      this.clinics = clinics
+
+      console.log(this.clinics, 'clinic')
+    },  
+    mounted () {
+      () => {
+        console.log('mounted======================')
+      }
     },
     data () {
       return {
         locations: ['Phnom Penh', 'Siem Reap'],
-        specialtyList: [
-          {
-            id: 1,
-            image: '@/assets/image/specialty/heart.png',
-            title: 'Cadiologiest'
-          },
-          {
-            id: 2,
-            image: '@/assets/image/specialty/heart.png',
-            title: 'Cadiologiest'
-          },
-          {
-            id: 3,
-            image: '@/assets/image/specialty/heart.png',
-            title: 'Cadiologiest'
-          },
-          {
-            id: 4,
-            image: '@/assets/image/specialty/heart.png',
-            title: 'Cadiologiest'
-          },
-          {
-            id: 5,
-            image: '@/assets/image/specialty/heart.png',
-            title: 'Cadiologiest'
-          },
-          {
-            id: 6,
-            image: '@/assets/image/specialty/heart.png',
-            title: 'Cadiologiest'
-          },
-          {
-            id: 7,
-            image: '@/assets/image/specialty/heart.png',
-            title: 'Cadiologiest'
-          },
-          {
-            id: 8,
-            image: '@/assets/image/specialty/heart.png',
-            title: 'Cadiologiest'
-          },
-          {
-            id: 9,
-            image: '@/assets/image/specialty/heart.png',
-            title: 'Cadiologiest'
-          },
-          {
-            id: 10,
-            image: '@/assets/image/specialty/heart.png',
-            title: 'Cadiologiest'
-          },
-          {
-            id: 11,
-            image: '@/assets/image/specialty/heart.png',
-            title: 'Cadiologiest'
-          },
-        ]
+        specialtyList: [],
+        clinics: [],
+        doctors: []
       }
     }
   }
