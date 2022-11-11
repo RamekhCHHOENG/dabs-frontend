@@ -1,23 +1,13 @@
 <template>
   <v-row>
     <v-dialog
-      v-model="dialog"
+      class="rounded-xl"
+      v-bind="getAttributesBinding"
+      v-on="$listeners"
+      scrollable
       persistent
-      max-width="600px"
+      width="600px"
     >
-    <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          class="text-capitalize"
-          color="primary"
-          dark
-          rounded
-          v-bind="attrs"
-          v-on="on"
-        >
-          <v-icon>mdi-doctor</v-icon>
-          For Doctor
-        </v-btn>
-      </template>
       <v-card elevation="4" light tag="section">
         <v-card-title>
           <v-layout align-center justify-space-between>
@@ -88,7 +78,7 @@
                     <v-btn
                       color="error"
                       depressed
-                      @click="dialog = false"
+                      @click="onCancel"
                     >
                       Cancel
                     </v-btn>
@@ -217,7 +207,7 @@
                       <v-btn
                         color="error"
                         depressed
-                        @click="dialog = false"
+                        @click="onCancel"
                       >
                         Cancel
                       </v-btn>
@@ -246,6 +236,16 @@
 import AuthService from '@/services/auth.service'
 export default {
   name: 'LoginView',
+  props: {
+    value: {
+      type: Boolean,
+      default: () => false
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       dialog: false,
@@ -272,17 +272,17 @@ export default {
         phoneNumber: ''
       },
       rules: {
-      email: value => {
+        email: value => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
           return pattern.test(value) || "Your Email should look like user@email.com";
-      },
-      emailRequired: value => !!value || "You must enter your Email",
-      passwordRequired: value => !!value || "Your password is required",
-      passwordMatch: value => value === this.registerForm.newPassword || "Your passwords don't match",
-      min: v =>
+        },
+        emailRequired: value => !!value || "You must enter your Email",
+        passwordRequired: value => !!value || "Your password is required",
+        passwordMatch: value => value === this.registerForm.newPassword || "Your passwords don't match",
+        min: v =>
           v.length >= 8 ||
           "Your password must be at least 8 characters",
-      emailMatch: () => "The email and password you entered don't match"
+        emailMatch: () => "The email and password you entered don't match"
       }
     }
   },
@@ -297,8 +297,7 @@ export default {
       } catch (error) {
         console.log(error.response.data.message, 'error')
       } finally {
-        // this.$emit('update:dialog', false)
-        this.dialog = false
+        this.$emit('onCancel')
       }
     },
     async register () {
@@ -317,7 +316,19 @@ export default {
       } finally {
         // this.$emit('update:dialog', false)
       }
+    },
+    onCancel () {
+      this.$emit('onCancel')
     }
+  },
+  computed: {
+    getAttributesBinding() {
+      return {
+        ...this.$attrs,
+        value: this.value,
+        loading: this.loading
+      };
+    },
   }
 }
 </script>

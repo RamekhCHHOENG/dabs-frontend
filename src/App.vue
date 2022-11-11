@@ -26,7 +26,7 @@
 
       <v-spacer></v-spacer>
 
-      <navbar /> 
+      <navigation-view />
 
     </v-app-bar>
 
@@ -35,7 +35,7 @@
     </v-main>
     
     <div>
-      <d-footer />
+      <footer-view />
     </div>
   </v-app>
 </template>
@@ -46,8 +46,11 @@ export default {
   name: 'App',
 
   components: {
-    'navbar': () => import('@/components/navigation/NavBar.vue'),
-    'd-footer': () => import('@/components/footer/Footer.vue')
+    'navigation-view': () => import('@/components/navigation.vue'),
+    'footer-view': () => import('@/components/footer/Footer.vue'),
+  },
+  mounted () {
+    console.log(' app mounted')
   }
 }
 </script>

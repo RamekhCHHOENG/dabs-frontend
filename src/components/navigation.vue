@@ -3,7 +3,6 @@
     <v-btn to="#" depressed rounded dense> Doctor </v-btn>
     <v-btn to="#" depressed rounded dense> Clinics </v-btn>
     <v-btn to="#" depressed rounded dense> About </v-btn>
-
     <template class="right-tool-bar">
       <!-- Tranlations -->
       <v-menu offset-y open-on-hover>
@@ -72,66 +71,46 @@
         </v-avatar>
         <span class="text--body-1 ml-3">RamekhCHHOENG</span>
       </template>
-      <template>
+      <template v-if="!user">
         <v-btn
           class="text-capitalize"
           color="primary"
           dark
           rounded
-          @click="delRecord"
+          @click="openDialog"
         >
           <v-icon>mdi-doctor</v-icon>
           For Doctor
         </v-btn>
       </template>
     </template>
-    <!-- <LoginDialog ref="login" /> -->
-  </div>
-  <!-- <v-toolbar-items>
-  </v-toolbar-items> -->
-</template>
 
+    <login :value="dialog" @onCancel="dialog = false"/>
+  </div>
+</template>
 <script>
 
 import AuthService from '@/services/auth.service'
 
 export default {
-  name: 'NavBar',
-  component: {
-    // LoginDialog: () => import('@/views/authentication/Login.vue'),
+  name: "NavigatonView",
+  components: {
+    login: () => import("@/views/authentication/Login.vue"),
   },
   async created () {
     this.user = await AuthService.getUserData()
-    console.log(this.user, 'here user data')
-  },  
-
-  data: () => ({
-    user: null,
-    dialog: true,
-  }),
+  }, 
+  data() {
+    return {
+      user: null,
+      dialog: false,
+    };
+  },
   methods: {
-    async delRecord() {
-        if (
-          await this.$refs.confirm.open(
-            "Confirm",
-            "Are you sure you want to delete this record?"
-          )
-        ) {
-          this.deleteRecord();
-        }
-      },
-    async logout () {
-      try {
-        await AuthService.logout()
-      } catch (error) {
-        console.log(error)
-      } finally {
-        this.user = null
-      }
-    },
-    openLoginDialog () {
-      this.$refs.login.open()
+    openDialog () {
+      this.dialog = true
+      console.log(this.dialog, 'open dialog')
     }
   }
-}
+};
 </script>

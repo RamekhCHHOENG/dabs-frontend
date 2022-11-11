@@ -21,7 +21,7 @@
       </v-col>
       <v-col cols="5">
         <v-autocomplete
-          :items="locations"
+          :items="search"
           label="Search Doctor, Clinics, Hospitals, Diseases Etc"
           auto-select-first
           clearable
@@ -76,26 +76,6 @@
         />
       </div>
     </div>
-
-    <!-- <div>
-      <v-container
-      >
-        <v-fade-transition mode="out-in">
-          <v-row>
-            <v-col cols="12">
-              <v-card>
-                <v-img
-                  src="@/assets/images/doctor-office-banner-background-healthcare-hospital-background-concept-87323968.jpeg"
-                  contain
-                  class="grey darken-4"
-                ></v-img>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-fade-transition>
-      </v-container>
-    </div> -->
-    <login />
   </v-container>
 </template>
 
@@ -119,19 +99,16 @@
       const { clinics } = await ClinicService.getTopClinic()
       const { doctors } = await DoctorService.getTopDoctor()
       this.doctors = doctors
+      console.log(this.doctors, 'this doctors')
       this.specialtyList = specialties
       this.clinics = clinics
-
-      console.log(this.clinics, 'clinic')
     },  
-    mounted () {
-      () => {
-        console.log('mounted======================')
-      }
-    },
     data () {
       return {
         locations: ['Phnom Penh', 'Siem Reap'],
+        filters: {
+          search: ''
+        },
         specialtyList: [],
         clinics: [],
         doctors: []
